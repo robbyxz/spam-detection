@@ -13,49 +13,54 @@ License: Apache 2.0
 ---
 
 ## Methodology
-The project follows a standard NLP pipeline:
+The project follows a standard NLP pipeline to ensure robust classification performance:
 
-- Data loading and exploration  
-- Text preprocessing (cleaning and normalization)  
-- Train-test split  
-- Text vectorization using CountVectorizer (for Naive Bayes models)  
-- Tokenization and padding (for RNN model)  
+- **Data Loading and Exploration:** Initial audit of the dataset to understand class distribution and potential issues.
+- **Data Quality Assessment:** Verification of null and missing values, including checking for placeholders like "None" to ensure data integrity.
+- **Exploratory Data Analysis (EDA):** Analysis of message length distributions, revealing that non-spam (ham) emails typically cluster under 100 characters, whereas spam emails tend to be longer, peaking around 160 characters.
+- **Label Encoding:** Conversion of categorical labels ("ham", "spam") into numerical values (0, 1) for model compatibility.
+- **Train-Test Split:** Splitting the data into training (80%) and testing (20%) sets, using stratification to maintain the original class proportions.
+- **Text Vectorization:** - **Bag of Words:** Used `CountVectorizer` to convert raw text into numerical frequency matrices for Naive Bayes models.
+    - **Tokenization & Padding:** Applied `Tokenizer` and `pad_sequences` to transform text into numerical sequences, preserving word order for the RNN architecture.
 
 ---
 
 ## Models
-Three models were implemented:
+Three distinct modeling strategies were implemented to address different business priorities:
 
-- Multinomial Naive Bayes – based on word frequency (Bag-of-Words representation)  
-- Bernoulli Naive Bayes – based on binary word presence/absence  
-- Recurrent Neural Network (SimpleRNN) – captures sequential dependencies in text using embeddings  
+- **Multinomial Naive Bayes:** A baseline model leveraging word frequency counts.
+- **Bernoulli Naive Bayes:** A model utilizing binary features to indicate the presence or absence of specific terms.
+- **Recurrent Neural Network (SimpleRNN):** A deep learning approach incorporating an Embedding layer (dimension=100), a SimpleRNN layer (128 units), and Dropout (0.3) to capture semantic relationships and sequential dependencies.
 
 ---
 
 ## Results
 
 ### Multinomial Naive Bayes
-- Accuracy: ~98%  
+- Precision (Spam): 0.95  
+- Recall (Spam): 0.93  
 - ROC-AUC: 0.98  
 
 ### Bernoulli Naive Bayes
+- Precision (Spam): 0.98  
+- Recall (Spam): 0.87  
 - ROC-AUC: 0.997  
-- Strong ham recall (1.00), lower spam recall (0.87)  
 
 ### RNN Model
-- Accuracy: 99%  
+- Precision (Spam): 0.98  
+- Recall (Spam): 0.91  
 - ROC-AUC: 0.992  
 - Best balance between precision and recall  
 
 ---
 
 ## Business Impact
-This system can be used to automatically filter spam messages in email or messaging platforms. It helps:
+This system is designed for deployment within real-world email or SMS filtering pipelines. Key benefits include:
 
-- Reduce phishing and scam exposure  
-- Improve user experience by filtering unwanted content  
-- Lower operational costs by reducing manual moderation  
-- Increase platform security and trust  
+- **Enhanced Security:** High recall for spam allows for the proactive identification of phishing and fraudulent links, minimizing user risk.
+- **Platform Trust:** Automated filtering improves the overall user experience by reducing exposure to unwanted content.
+- **Efficiency:** Reducing the volume of spam increases operational efficiency and lowers the costs associated with manual moderation.
+- **Business Continuity:** High precision ensures that legitimate communications are not incorrectly flagged (false positives), avoiding potential revenue loss or negative impacts on customer relationships.
 
 ---
 
